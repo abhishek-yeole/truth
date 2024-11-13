@@ -2,12 +2,26 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link id="favicon" rel="icon" type="image/svg+xml" href="/truth-dark.svg" />
+    <!-- <link rel="manifest" href="/manifest.json" /> -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Truth</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      function updateFavicon() {
+        const favicon = document.getElementById("favicon");
+        const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+        if (prefersDarkScheme.matches) {
+          favicon.href = "/truth-dark.svg";
+        } else {
+          favicon.href = "/truth-light.svg";
+        }
+      }
+      updateFavicon();
+      window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", updateFavicon);
+    </script>
   </body>
 </html>
