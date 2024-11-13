@@ -3,7 +3,7 @@ import { SunIcon } from "../assets/SunIcon";
 import { MoonIcon } from "../assets/MoonIcon";
 import { useTheme } from "next-themes";
 import { Link, useNavigate } from "react-router-dom";
-import TruthLogo from "../assets/TruthLogo.svg";
+import TruthLogo from "../assets/truth-dark.svg";
 import SearchIcon from "../assets/SearchIcon";
 import { useState } from "react";
 
@@ -49,19 +49,19 @@ const NavbarMain = () => {
             <p className="font-bold text-inherit">TRUTH</p>
           </NavbarBrand>
         </Link>
-        <NavbarContent className="hidden sm:flex gap-3">
+        <NavbarContent className="hidden sm:flex gap-5">
           <NavbarItem>
-            <Link to="./about" aria-current="page">
+            <Link to="./about" aria-current="page" className="hover:text-red-600 hover:border-b-1 hover:border-red-600 hover:shadow-lg hover:shadow-red-600 font-semibold active:scale-90 transition-all">
               About
             </Link>
           </NavbarItem>
           <NavbarItem>
-            <Link to="./working" aria-current="page">
+            <Link to="./working" aria-current="page" className="hover:text-red-600 hover:border-b-1 hover:border-red-600 hover:shadow-lg hover:shadow-red-600 font-semibold active:scale-90 transition-all">
               How it works ?
             </Link>
           </NavbarItem>
           <NavbarItem>
-            <Link to="./inspiration" aria-current="page">
+            <Link to="./inspiration" aria-current="page" className="hover:text-red-600 hover:border-b-1 hover:border-red-600 hover:shadow-lg hover:shadow-red-600 font-semibold active:scale-90 transition-all">
               Inspiration
             </Link>
           </NavbarItem>
@@ -107,7 +107,7 @@ const NavbarMain = () => {
               isBordered
               as="button"
               className="transition-transform"
-              color="secondary"
+              color="danger"
               name="Jason Hughes"
               size="sm"
               src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
