@@ -1,5 +1,5 @@
 import React from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import TruthLogo from '../assets/truth-dark.svg';
 import { Switch } from '@nextui-org/react';
 import { SunIcon } from "../assets/SunIcon";
@@ -8,11 +8,12 @@ import { useTheme } from "next-themes";
 
 const Auth = () => {
   const { theme, setTheme } = useTheme();
+  const navigateTo = useNavigate();
 
   return (
     <div>
-      <div className='nav flex justify-around items-center align-middle w-full h-16 rounded-b-full bg-gray-200 dark:bg-neutral-900'>
-        <div className='flex justify-center items-center align-middle gap-2'>
+      <div className='nav flex justify-around items-center align-middle w-full h-16 rounded-b-3xl sm:rounded-b-full bg-gray-200 dark:bg-neutral-900'>
+        <div className='flex justify-center items-center align-middle gap-2 cursor-pointer' onClick={() => navigateTo('/')}>
           <img src={TruthLogo} alt="Truth Logo" className="w-auto h-10 sm:h-8" />
           <p className="font-bold text-inherit">TRUTH</p>
         </div>
