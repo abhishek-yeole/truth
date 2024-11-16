@@ -126,32 +126,8 @@ const Register = () => {
   }, []);
 
   return (
-    <div className="h-fit w-full flex flex-wrap justify-center align-middle items-center p-5 sm:p-10 gap-2 transition-all">
+    <>
       {isLoading ? <Loader width="500px" height="250px" /> : null}
-
-      <AnimatePresence>
-        {showVortex && 
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.3, type: spring }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.3, type: spring }}
-            className="w-full h-[10rem] sm:h-[30rem] sm:w-[calc(100%-725px)] mx-auto rounded-lg overflow-hidden"
-          >
-            <Vortex
-              backgroundColor="black"
-              className="flex items-center flex-col justify-center px-2 md:px-10 py-4 w-full h-full"
-            >
-              <h2 className="text-white text-2xl md:text-6xl font-bold text-center">
-                The hell is this?
-              </h2>
-              <p className="text-white text-sm md:text-2xl max-w-xl mt-6 text-center">
-                This is chemical burn. It&apos;ll hurt more than you&apos;ve ever been
-                burned and you&apos;ll have a scar.
-              </p>
-            </Vortex>
-          </motion.div>
-        }
-      </AnimatePresence>
 
       <Card className="w-[700px] h-full">
         <CardHeader>
@@ -273,7 +249,7 @@ const Register = () => {
           )}
         </ModalContent>
       </Modal>
-    </div>
+    </>
   );
 };
 
