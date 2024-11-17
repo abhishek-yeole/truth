@@ -200,5 +200,5 @@ def delete_account():
         return jsonify({"message": "Something went wrong"}), 500
 
 
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+# if __name__ == '__main__':
+#     app.run(debug=True, host='0.0.0.0')
