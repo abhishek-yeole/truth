@@ -255,7 +255,7 @@ const Landing = () => {
 
                 <Divider className='my-5' />
                 <p className='text-justify indent-10'>                 
-                  The very first step of problem solving is problem analysis, that most of the political parties and government appears (not sure) to be skipping.
+                  The very first step of problem solving is problem analysis.
                   The <strong className='text-red-600'>Project Truth</strong> focusses mainly on problem analysis step. The project intends to bring real data without any biasness towards a particular political party / officers / government to all the people.
                 </p>
                 
