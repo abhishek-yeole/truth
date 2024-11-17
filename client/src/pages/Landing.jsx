@@ -1,6 +1,6 @@
 import React from 'react';
 import Globe from "../components/Globe";
-import { Accordion, AccordionItem, Button, Card, CardBody, Divider, Image, Input, Textarea } from '@nextui-org/react';
+import { Accordion, AccordionItem, Button, Card, CardBody, CardFooter, CardHeader, Divider, Image, Input, Textarea } from '@nextui-org/react';
 import Sdg16 from '../assets/unsdg16.svg';
 import TruthIcon from '../assets/truth-dark.svg';
 import { motion } from 'framer-motion';
@@ -67,6 +67,116 @@ const Landing = () => {
       description: "More tools can be added to enhance user experience and enable advanced data analysis. To contribute, visit *Developers - GitHub*."
     }
   ];
+
+  const features = [
+    {
+      id: 1,
+      title: "Globe Navigation",
+      icon: "🌍",
+      description:
+        "Easily explore issue distributions across different regions using an interactive globe.",
+      features: [
+        "Severity level",
+        "Issue type",
+        "Date and time",
+        "Resolution status"
+      ]
+    },
+    {
+      id: 2,
+      title: "Timeline View",
+      icon: "📅",
+      description:
+        "Visualize reported issues and resolutions within a selected timeframe.",
+      features: [
+        "Understand trends and patterns",
+        "Pinpoint crucial periods of action or inaction"
+      ]
+    },
+    {
+      id: 3,
+      title: "Advanced Analysis",
+      icon: "📊",
+      description:
+        "Leverage powerful tools to measure statistics including personal contributions and regional performance metrics.",
+      features: [
+        "Personal user contributions (issues raised, upvoted, approved, comments)",
+        "Regional performance metrics and summaries"
+      ]
+    },
+    {
+      id: 4,
+      title: "Collaborative Action",
+      icon: "🤝",
+      description:
+        "Foster collaboration by connecting users with shared concerns. Suggest solutions and participate in discussions for better governance.",
+      features: []
+    },
+    {
+      id: 5,
+      title: "Transparent Performance Metrics",
+      icon: "📈",
+      description:
+        "Measure political performance using unbiased, crowdsourced data. Track improvements and hold leaders accountable.",
+      features: [
+        "Track improvements over time",
+        "Hold leaders and departments accountable"
+      ]
+    },
+    {
+      id: 6,
+      title: "Privacy and Security",
+      icon: "🔒",
+      description:
+        "Your data is safe, anonymous, and solely for verification. Easily delete accounts or personal data.",
+      features: [
+        "Strong data privacy policies",
+        "Easily delete accounts or personal data"
+      ]
+    },
+    {
+      id: 7,
+      title: "Community Dashboard",
+      icon: "🌐",
+      description:
+        "A consolidated dashboard highlighting top issues, resolved cases, and areas needing urgent attention.",
+      features: [
+        "Compare regions and track progress",
+        "Encourage widespread participation for change"
+      ]
+    },
+    {
+      id: 8,
+      title: "Goal Alignment with UN SDGs",
+      icon: "🌱",
+      description:
+        "Designed to align with UN SDG Goal 16, contributing to inclusive and sustainable development.",
+      features: []
+    }
+  ];  
+
+  const FeatureCard = ({ feature }) => {
+    return (
+      <Card>
+        <CardBody className="flex flex-wrap justify-center items-center gap-5">
+          <p className="hidden sm:block text-[80px]">{feature.icon}</p>
+          <div className="flex flex-col">
+            <p className='text-2xl font-bold text-blue-600 flex gap-3'><span className='block sm:hidden'>{feature.icon}</span>{feature.title}</p>
+            <p className="my-2">{feature.description}</p>    
+            {feature.features.length > 0 && (
+              <ul className="list-disc ml-5">
+                {feature.features.map((item, index) => (
+                  <li key={index} className="text-sm text-neutral-700 dark:text-neutral-300">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </CardBody>
+      </Card>
+    );
+  };
 
   return (
     <>
@@ -225,6 +335,50 @@ const Landing = () => {
                     </li>
                   ))}
                 </ul><br />
+              </div>
+            </div>
+          </CardBody>
+        </Card>
+
+        <Card
+          id='features'
+          className="border-none bg-background/60 dark:bg-default-100/50"
+          shadow="lg"
+          fullWidth
+        >
+          <CardBody>
+            <div className="flex flex-col gap-5 justify-center p-2 sm:p-3s">
+              <p className='text-3xl font-bold text-red-600 text-center sm:text-start w-full'>Features</p>
+              
+              <Divider className='my-5' />
+              {/* <Card>
+                <CardHeader>
+                  <p className='text-2xl font-bold text-blue-600'># Analytics</p><br />
+                </CardHeader>
+                <CardBody className="flex justify-center gap-5">
+                  {features.map((feature) => (
+                    <div className="card p-4 shadow-md rounded-lg">
+                      <div className="icon text-3xl mb-2">{feature.icon}</div>
+                      <h3 className="font-bold text-lg">{feature.title}</h3>
+                      <p className="my-2">{feature.description}</p>
+                      {feature.features.length > 0 && (
+                        <ul className="list-disc ml-5">
+                          {feature.features.map((item, index) => (
+                            <li key={index} className="text-sm text-neutral-800 dark:text-neutral-300">
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  ))}
+                </CardBody>
+              </Card> */}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {features.map((feature) => (
+                  <FeatureCard key={feature.id} feature={feature} />
+                ))}
               </div>
             </div>
           </CardBody>

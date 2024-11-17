@@ -1,5 +1,5 @@
 import React from 'react';
-import WorkingMD from '../data/workingMD';
+import WorkingMD from '../data/WorkingMD';
 import AuthWorkflow from "../assets/auth_workflow.svg";
 import UserCollections from '../data/UserCollections';
 import IssuesCollections from '../data/IssuesCollections';

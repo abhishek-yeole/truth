@@ -80,8 +80,8 @@ const User = () => {
   }, [location.pathname]);
     
   return (
-    <div>
-      <div className="absolute bottom-0 left-0 bg-gray-100 dark:bg-neutral-800 rounded-tr-3xl w-[35%] h-12 sm:w-[10%] sm:h-14 flex justify-center align-middle items-center gap-1">
+    <>
+      <div className="fixed bottom-0 z-50 left-0 bg-gray-100 dark:bg-neutral-800 rounded-tr-3xl w-[35%] h-12 sm:w-[10%] sm:h-14 flex justify-center align-middle items-center gap-1">
         <div className="flex justify-center align-bottom items-center gap-2 pr-1 cursor-pointer active:scale-90 transition-all" onClick={() => navigate('/')}>
           <img src={TruthLogo} alt="Truth Logo" className="w-auto h-8 sm:h-6" />
           <p className="font-bold text-inherit hidden sm:block">TRUTH</p>
@@ -108,7 +108,7 @@ const User = () => {
         />
         <div className='cursor-pointer block sm:hidden' onClick={() => window.location.reload(false)}><ReloadIcon className="h-8 w-8 text-neutral-500 dark:text-neutral-300" /></div>
       </div>
-      <div className='absolute bottom-0 right-0 bg-gray-100 dark:bg-neutral-800 rounded-tl-3xl w-[10%] h-14 hidden sm:block'>
+      <div className='fixed bottom-0 z-50 right-0 bg-gray-100 dark:bg-neutral-800 rounded-tl-3xl w-[10%] h-14 hidden sm:block'>
         <div className='flex justify-center align-middle items-center gap-2 w-full h-full'>
           <Switch
             defaultSelected
@@ -132,9 +132,9 @@ const User = () => {
           <div className='cursor-pointer' onClick={() => window.location.reload(false)}><ReloadIcon className="h-8 w-8 text-neutral-500 dark:text-neutral-300" /></div>
         </div>
       </div>
-      <FloatingDock items={links} desktopClassName="absolute bottom-2 left-1/2 -translate-x-1/2" mobileClassName="absolute bottom-2 right-2" />
+      <FloatingDock items={links} desktopClassName="z-50 fixed bottom-2 left-1/2 -translate-x-1/2" mobileClassName="z-50 fixed bottom-2 right-2" />
       <Outlet />
-    </div>
+    </>
   )
 }
 

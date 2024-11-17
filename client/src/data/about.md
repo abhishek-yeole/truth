@@ -105,3 +105,40 @@ Now the people can directly consider the statistics and get a **quantitative ter
 1. Project Introduction
 2. Myself
 3. FAQ's
+
+
+
+## About the Project: Truth  
+
+### **What Inspired Us**  
+Project Truth was inspired by the pressing need for transparency and accountability in governance, aligned with the United Nations' Sustainable Development Goal 16. Observing the influence of biased social media narratives and the lack of actionable data for measuring governance performance, we envisioned a platform where real, unbiased issues could be raised and addressed collaboratively. A platform called _GROUND News_ shows the importance of unbiased data. Events like the GNEC Hackathon 2024 Fall motivated us to channel our efforts into creating a meaningful, impactful solution. Tools like Ground News also emphasized the importance of neutral data in shaping public opinion.  
+
+---
+
+### **What We Learned**  
+Building this project taught us valuable lessons:  
+- **The power of unbiased data**: Transparent systems can empower communities and rebuild trust.  
+- **User-centric design**: Designing intuitive tools fosters engagement and usability.  
+- **Data privacy challenges**: Maintaining trust requires robust privacy and security practices.  
+- **Collaboration matters**: The diversity of ideas leads to innovative solutions.  
+
+---
+
+### **How We Built It**  
+We developed Project Truth using the following:  
+- **Frontend**: React and Tailwind CSS for an interactive and user-friendly interface.  
+- **Backend**: Python Flask to handle user input, issue submissions, and data management.  
+- **Database**: MongoDB for efficient storage of anonymized user data and issue tracking.  
+- **Mapping & Analysis Tools**: Integrated APIs for map visualizations and dynamic data analytics.  
+
+The system is designed to prioritize **data abstraction** and **user privacy**, with options for raising, verifying, and analyzing issues anonymously.  
+
+---
+
+### **Challenges We Faced**  
+1. **Data Privacy**: Ensuring secure user verification without breaching privacy was a critical challenge. We opted for email-based verification for the prototype while planning for future government partnerships.  
+2. **Bias Elimination**: Creating a system that processes user inputs without political or social bias required advanced filtering and abstraction techniques.  
+3. **Complex Analysis**: Integrating tools to display comprehensive, actionable insights from large datasets took time and iteration.  
+4. **Scalability**: Designing a system that can adapt to a growing user base and data influx while maintaining performance.  
+
+Despite these challenges, we built a prototype that demonstrates the platform's potential and scalability, paving the way for future enhancements.  
