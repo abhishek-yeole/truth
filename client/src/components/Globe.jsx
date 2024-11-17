@@ -640,7 +640,7 @@ export default function GlobeDemo() {
           </h2>
           <p
             className="text-center text-base md:text-lg font-normal text-neutral-700 dark:text-neutral-200 max-w-3xl mt-2 mx-auto">
-            The Project Truth focusses on the very first step of problem solving that is, Problem Analysis. The project intends to bring real data available all the people, without any biasness towards a particular culture, religion, political party, officers, government.
+            Project Truth empowers citizens to raise issues, suggest solutions, and track governance progress transparently. With unbiased data, it fosters truth, trust, collaboration for sustainable development.
           </p>
         </motion.div>
         <div

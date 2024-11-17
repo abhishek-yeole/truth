@@ -351,29 +351,6 @@ const Landing = () => {
               <p className='text-3xl font-bold text-red-600 text-center sm:text-start w-full'>Features</p>
               
               <Divider className='my-5' />
-              {/* <Card>
-                <CardHeader>
-                  <p className='text-2xl font-bold text-blue-600'># Analytics</p><br />
-                </CardHeader>
-                <CardBody className="flex justify-center gap-5">
-                  {features.map((feature) => (
-                    <div className="card p-4 shadow-md rounded-lg">
-                      <div className="icon text-3xl mb-2">{feature.icon}</div>
-                      <h3 className="font-bold text-lg">{feature.title}</h3>
-                      <p className="my-2">{feature.description}</p>
-                      {feature.features.length > 0 && (
-                        <ul className="list-disc ml-5">
-                          {feature.features.map((item, index) => (
-                            <li key={index} className="text-sm text-neutral-800 dark:text-neutral-300">
-                              {item}
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  ))}
-                </CardBody>
-              </Card> */}
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {features.map((feature) => (
