@@ -61,7 +61,7 @@ const Register = () => {
       setIsLoading(true);
 
       try {
-        const res = await fetch( 'http://127.0.0.1:5000/user/verifymail', {
+        const res = await fetch( 'https://truth-backend.vercel.app/user/verifymail', {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json',

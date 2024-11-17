@@ -24,6 +24,7 @@ import time
 load_dotenv()
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = '7367jdbhjw123h782d27dsnsjx'
 
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const debug = localStorage.getItem("debug");
-const url = "http://127.0.0.1:5000"; 
+const url = "https://truth-backend.vercel.app/"; 
 
 const instance = axios.create({
   baseURL: url,
