@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import Loader from "../components/Loader";
+import Loader from "./ui/Loader";
 import Validator from "../contexts/Validator";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../axios.js";
 import { useGlobalContext } from "../contexts/GlobalContext";
-import { useTheme } from "next-themes";
 import { toast } from "react-hot-toast";
 import { Card, CardBody, CardFooter, Input, Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, CardHeader} from "@nextui-org/react";
 import MailIcon from '../assets/MailIcon';
@@ -13,7 +12,6 @@ import { EyeSlashFilledIcon } from '../assets/EyeSlashFilledIcon';
 import GoogleIcon from '../assets/GoogleIcon';
 import { motion, AnimatePresence, spring } from 'framer-motion';
 import OtpForm from "./OtpForm";
-import { Vortex } from "./Vortex.jsx";
 
 const initialForm = {
   name: "",

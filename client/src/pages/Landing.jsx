@@ -1,5 +1,5 @@
 import React from 'react';
-import Globe from "../components/Globe";
+import Globe from "../components/ui/Globe";
 import { Accordion, AccordionItem, Button, Card, CardBody, CardFooter, CardHeader, Divider, Image, Input, Textarea } from '@nextui-org/react';
 import Sdg16 from '../assets/unsdg16.svg';
 import TruthIcon from '../assets/truth-dark.svg';

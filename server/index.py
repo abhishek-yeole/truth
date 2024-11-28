@@ -1,30 +1,25 @@
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, send_from_directory
 from flask_cors import CORS
 from pymongo.mongo_client import MongoClient
-from pymongo.server_api import ServerApi
 from bson.objectid import ObjectId
 import google.generativeai as genai
 import urllib.parse
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token
 from middleware.authUser import auth_user
-from datetime import timedelta 
-import json
-from bson import ObjectId, json_util
+from datetime import timedelta, datetime
+from bson import ObjectId
 from email.message import EmailMessage
 import smtplib
 import ssl
 from dotenv import load_dotenv
 import random
 import os
-import re
-import requests
-import time
 
 load_dotenv()
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '7367jdbhjw123h782d27dsnsjx'
+app.config['SECRET_KEY'] = os.getenv('FLASK_APP_SECRET_KEY')
 
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
@@ -44,6 +39,7 @@ client = MongoClient(uri)
 db = client.Truth
 users_collection = db["users"]
 otps_collection = db['otps']
+issues_collection = db['issues']
 
 # Send a ping to confirm a successful connection
 try:
@@ -85,15 +81,16 @@ safety_settings = [
 
 model = genai.GenerativeModel('gemini-1.5-flash', generation_config=generation_config, safety_settings=safety_settings)
 
-# Caches to reduce no of queries to MongoDB...
-user_id_ping = {'current': 0}
-user_chats = {}
-
 @app.route('/')
 def index():
     return "Server is Running..."
 
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico', mimetype='image/vnd.microsoft.icon')
+
 # User Routes
+# Email Verification route
 @app.route('/user/verifymail', methods=['POST'])
 def verifymail():
     data = request.json
@@ -128,7 +125,7 @@ def verifymail():
 
     return jsonify({"success": True}), 200
 
-
+# Register route
 @app.route('/user/signup', methods=['POST'])
 def signup():
     data = request.json
@@ -162,7 +159,7 @@ def signup():
     else:
         return jsonify({"error": "Invalid otp"}), 400
 
-
+# Login Route
 @app.route('/user/signin', methods=['POST'])
 def signin():
     data = request.json
@@ -184,12 +181,11 @@ def signin():
 
     return jsonify({"result": res, "token": access_token}), 200
 
-
+# Account Deletion Route - Add another route for deletion verification by admin before removing from database.
 @app.route('/user/delete', methods=['POST'])
 @auth_user
 def delete_account():
     email = request.email
-    print(email)
     try:
         result = users_collection.delete_one({"email": email})
         if result.deleted_count == 1:
@@ -201,5 +197,80 @@ def delete_account():
         return jsonify({"message": "Something went wrong"}), 500
 
 
+# Helper Function to Convert ObjectId to String
+def serialize_issue(issue):
+    issue['_id'] = str(issue['_id'])
+    return issue
+
+# Route to Add a New Issue
+@app.route('/issues', methods=['POST'])
+@auth_user
+def add_issue():
+    data = request.json
+    try:
+        new_issue = {
+            "user_id": data["user_id"],
+            "title": data["title"],
+            "description": data["description"],
+            "location": data.get("location", {}),
+            "date": datetime.now().strftime("%d-%m-%Y"),
+            "modified": datetime.now().strftime("%d-%m-%Y %H:%M:%S"),
+            "approved": False,
+            "display": data.get("display", "public"),
+            "type": data.get("type", "general"),
+            "against": data.get("against", {}),
+            "resolved": data.get("resolved", {}),
+            "progress": data.get("progress", 0),
+            "severity": data.get("severity", 1),
+            "comments": [],
+            "upvotes": [],
+            "tags": data.get("tags", [])
+        }
+
+        # Insert the new issue into the database
+        result = issues_collection.insert_one(new_issue)
+        return jsonify({"message": "Issue added successfully", "issue_id": str(result.inserted_id)}), 201
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+# Route to Modify an Existing Issue
+@app.route('/issues/<string:issue_id>', methods=['PUT'])
+@auth_user
+def modify_issue(issue_id):
+    data = request.json
+    try:
+        update_fields = {
+            "title": data.get("title"),
+            "description": data.get("description"),
+            "location": data.get("location"),
+            "modified": datetime.now().strftime("%d-%m-%Y %H:%M:%S"),
+            "display": data.get("display"),
+            "type": data.get("type"),
+            "against": data.get("against"),
+            "resolved": data.get("resolved"),
+            "progress": data.get("progress"),
+            "severity": data.get("severity"),
+            "tags": data.get("tags")
+        }
+
+        # Remove fields with None values
+        update_fields = {key: value for key, value in update_fields.items() if value is not None}
+
+        # Ensure 'approved' is always reset to False
+        update_fields['approved'] = False
+
+        # Update the issue in the database
+        result = issues_collection.update_one({"_id": ObjectId(issue_id)}, {"$set": update_fields})
+        
+        if result.matched_count == 0:
+            return jsonify({"message": "Issue not found"}), 404
+        
+        return jsonify({"message": "Issue updated successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
 # if __name__ == '__main__':
 #     app.run(debug=True, host='0.0.0.0')
+#     app.run(debug=True)

@@ -1,8 +1,8 @@
 import React from 'react'
 import TruthIcon from '../assets/truth-dark.svg';
 import { motion } from 'framer-motion';
-import { TextGenerateEffect } from '../components/TextGenerateEffect';
-import GithubButton from '../components/GithubButton';
+import { TextGenerateEffect } from '../components/ui/TextGenerateEffect';
+import GithubButton from '../components/ui/GithubButton';
 import GithubIcon from '../assets/GithubIcon';
 import { Link } from 'react-router-dom';
 

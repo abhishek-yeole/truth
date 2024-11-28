@@ -6,8 +6,7 @@ import { SunIcon } from "../assets/SunIcon";
 import { MoonIcon } from "../assets/MoonIcon";
 import { useTheme } from "next-themes";
 import { motion, AnimatePresence, spring } from 'framer-motion';
-import { Vortex } from '../components/Vortex';
-import Loader from '../components/Loader';
+import { Vortex } from '../components/ui/Vortex';
 
 const Auth = () => {
   const { theme, setTheme } = useTheme();

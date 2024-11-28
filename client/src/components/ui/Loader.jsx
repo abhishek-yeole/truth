@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom';
-import LoaderIcon from '../assets/LoaderIcon';
+import LoaderIcon from '../../assets/LoaderIcon';
 
 const Loader = () => {
   return ReactDOM.createPortal(

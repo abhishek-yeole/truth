@@ -11,7 +11,7 @@ import TimelineIcon from '../assets/TimelineIcon';
 import AnalyticsIcon from '../assets/AnalyticsIcon';
 import { useEffect, useState } from "react";
 import { useGlobalContext } from "../contexts/GlobalContext";
-import { FloatingDock } from "./Docker";
+import { FloatingDock } from "./ui/Docker";
 import { AnimatePresence, motion } from "framer-motion";
 import ShareIcon from "../assets/ShareIcon";
 import GithubIcon from "../assets/GithubIcon";

@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import {Button, Card, CardHeader, CardBody, CardFooter, Input} from "@nextui-org/react";
-import Loader from './Loader';
+import Loader from './ui/Loader';
 import Validator from "../contexts/Validator";
 import { useGlobalContext } from "../contexts/GlobalContext";
 import { toast } from "react-hot-toast";
-import { useTheme } from 'next-themes';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from "../axios.js";
 import MailIcon from '../assets/MailIcon';
 import { EyeFilledIcon } from '../assets/EyeFilledIcon';
 import { EyeSlashFilledIcon } from '../assets/EyeSlashFilledIcon';
 import GoogleIcon from '../assets/GoogleIcon';
-import { motion, AnimatePresence, spring } from 'framer-motion';
-import { Vortex } from './Vortex.jsx';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const initialForm = {
   email: "",
@@ -20,7 +18,6 @@ const initialForm = {
 };
 
 const Login = () => {
-  const { theme, setTheme } = useTheme();
   const [isLoading, setIsLoading] = useState(false);
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState({});

@@ -9,13 +9,14 @@ import Working from "./pages/Working";
 import Inspiration from "./pages/Inspiration";
 import Layout from "./components/Layout";
 import General from "./pages/General";
-import Analytics from "./components/Analytics";
-import Settings from "./components/Settings";
-import Action from "./components/Action";
-import Timeline from "./components/Timeline";
-import Home from "./components/Home";
+import Analytics from "./components/Analytics/Analytics";
+import Settings from "./components/Settings/Settings";
+import Action from "./components/Action/Action";
+import Timeline from "./components/Timeline/Timeline";
+import Home from "./components/Home/Home";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import Community from "./components/Community/Community";
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
             <Route path="analytics" element={<Analytics />} />
             <Route path="timeline" element={<Timeline />} />
             <Route path="action" element={<Action />} />
+            <Route path="community" element={<Community />} />
             <Route path="settings" element={<Settings />} />
           </Route>
         </Route>

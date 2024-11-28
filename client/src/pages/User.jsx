@@ -1,23 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import { Link, Outlet, useLocation } from 'react-router-dom';
-import { FloatingDock } from '../components/Docker'
-import HomeIcon from '../assets/HomeIcon';
-import AccountSettings from '../assets/AccountSettings';
-import ActionKeyIcon from '../assets/ActionKeyIcon';
-import TimelineIcon from '../assets/TimelineIcon';
-import AnalyticsIcon from '../assets/AnalyticsIcon';
-import TruthLogo from "../assets/truth-dark.svg";
-import { Switch } from '@nextui-org/react';
-import { useTheme } from "next-themes";
-import { SunIcon } from '../assets/SunIcon';
-import { MoonIcon } from '../assets/MoonIcon';
-import { useNavigate } from 'react-router-dom';
-import ReloadIcon from '../assets/ReloadIcon';
+import React, { useEffect, useState } from "react";
+import { Outlet, useLocation } from "react-router-dom";
+import { FloatingDock } from "../components/ui/Docker";
+import { SidebarMain } from "../components/SidebarMain";
+import HomeIcon from "../assets/HomeIcon";
+import AccountSettings from "../assets/AccountSettings";
+import ActionKeyIcon from "../assets/ActionKeyIcon";
+import TimelineIcon from "../assets/TimelineIcon";
+import AnalyticsIcon from "../assets/AnalyticsIcon";
+import { CommunityIcon } from "../assets/CommunityIcon";
 
-const User = () => {
-  const { theme, setTheme } = useTheme();
-  const navigate = useNavigate();
+export default function User () {
   const location = useLocation();
+  const [tabs, setTabs] = useState([]);
   const [links, setLinks] = useState([
     {
       title: "Home",
@@ -57,12 +51,21 @@ const User = () => {
       active: false,
     },
     {
+      title: "Community",
+      icon: (
+        <CommunityIcon className="h-full w-full text-cyan-500" />
+      ),
+      href: "/user/community",
+      bgColor: "bg-cyan-500/20 shadow-cyan-500/40",
+      active: false,
+    },
+    {
       title: "Settings",
       icon: (
-        <AccountSettings className="h-full w-full text-violet-500" />
+        <AccountSettings className="h-full w-full text-fuchsia-500" />
       ),
       href: "/user/settings",
-      bgColor: "bg-violet-500/20 shadow-violet-500/40",
+      bgColor: "bg-fuchsia-500/20 shadow-fuchsia-500/40",
       active: false,
     },
   ]);
@@ -81,61 +84,10 @@ const User = () => {
     
   return (
     <>
-      <div className="fixed bottom-0 z-50 left-0 bg-gray-100 dark:bg-neutral-800 rounded-tr-3xl w-[35%] h-12 sm:w-[10%] sm:h-14 flex justify-center align-middle items-center gap-1">
-        <div className="flex justify-center align-bottom items-center gap-2 pr-1 cursor-pointer active:scale-90 transition-all" onClick={() => navigate('/')}>
-          <img src={TruthLogo} alt="Truth Logo" className="w-auto h-8 sm:h-6" />
-          <p className="font-bold text-inherit hidden sm:block">TRUTH</p>
-        </div>
-        <Switch
-          className='block sm:hidden'
-          defaultSelected
-          size="sm"
-          color="primary"
-          thumbIcon={({ isSelected, className }) =>
-            !isSelected ? (
-              <SunIcon className={className} />
-            ) : (
-              <MoonIcon className={className} />
-            )
-          }
-          onClick={() => {
-            if (theme === "light") {
-              setTheme("dark");
-            } else if (theme === "dark") {
-              setTheme("light");
-            }
-          }}
-        />
-        <div className='cursor-pointer block sm:hidden' onClick={() => window.location.reload(false)}><ReloadIcon className="h-8 w-8 text-neutral-500 dark:text-neutral-300" /></div>
+      <FloatingDock items={links} desktopClassName="z-[49] fixed bottom-2 left-1/2 -translate-x-1/2" mobileClassName="z-50 fixed bottom-2 right-2" />
+      <div className="h-screen">
+        <SidebarMain content={<Outlet context={{ tabs, setTabs }} />} tabs={tabs} setTabs={setTabs}/>
       </div>
-      <div className='fixed bottom-0 z-50 right-0 bg-gray-100 dark:bg-neutral-800 rounded-tl-3xl w-[10%] h-14 hidden sm:block'>
-        <div className='flex justify-center align-middle items-center gap-2 w-full h-full'>
-          <Switch
-            defaultSelected
-            size="sm"
-            color="primary"
-            thumbIcon={({ isSelected, className }) =>
-              !isSelected ? (
-                <SunIcon className={className} />
-              ) : (
-                <MoonIcon className={className} />
-              )
-            }
-            onClick={() => {
-              if (theme === "light") {
-                setTheme("dark");
-              } else if (theme === "dark") {
-                setTheme("light");
-              }
-            }}
-          />
-          <div className='cursor-pointer' onClick={() => window.location.reload(false)}><ReloadIcon className="h-8 w-8 text-neutral-500 dark:text-neutral-300" /></div>
-        </div>
-      </div>
-      <FloatingDock items={links} desktopClassName="z-50 fixed bottom-2 left-1/2 -translate-x-1/2" mobileClassName="z-50 fixed bottom-2 right-2" />
-      <Outlet />
     </>
   )
 }
-
-export default User

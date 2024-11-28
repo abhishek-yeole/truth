@@ -1,10 +1,8 @@
-import React from 'react'
-import Map from '../assets/analytics_map.png';
-import Chart1 from './Charts/Chart1';
-import Chart2 from './Charts/Chart2';
-import { Autocomplete, AutocompleteItem, Card, CardBody, Select, SelectItem } from '@nextui-org/react';
+import React from 'react';
+import { Autocomplete, AutocompleteItem, Select, SelectItem } from '@nextui-org/react';
+import Map from '../../assets/analytics_map.png';
 
-const Analytics = () => {
+const Global = () => {
   const statesOfIndia = [
     { label: "Andhra Pradesh", value: "andhra-pradesh" },
     { label: "Arunachal Pradesh", value: "arunachal-pradesh" },
@@ -65,40 +63,32 @@ const Analytics = () => {
   ];  
 
   return (
-    <div className='flex flex-col sm:flex-row p-5'>
-      <div className='flex flex-col'>
-        <div className='flex gap-2'>
-          <Select 
-            label="Select an search filter" 
-            className="max-w-xs" 
-          >
-            {searchFilters.map((filter) => (
-              <SelectItem key={filter.key}>
-                {filter.label}
-              </SelectItem>
-            ))}
-          </Select>
-          <Autocomplete
-            label="Select an state" 
-            className="max-w-full" 
-          >
-            {statesOfIndia.map((state) => (
-              <AutocompleteItem key={state.value} value={state.value}>
-                {state.label}
-              </AutocompleteItem>
-            ))}
-          </Autocomplete>
-        </div>
-        <img src={Map} alt="Analytics Map India" className='w-auto h-auto' />
+    <div className='flex flex-col'>
+      <div className='flex gap-2'>
+        <Select 
+          label="Select an search filter" 
+          className="max-w-xs" 
+        >
+          {searchFilters.map((filter) => (
+            <SelectItem key={filter.value}>
+              {filter.label}
+            </SelectItem>
+          ))}
+        </Select>
+        <Autocomplete
+          label="Select an state" 
+          className="max-w-full" 
+        >
+          {statesOfIndia.map((state) => (
+            <AutocompleteItem key={state.value} value={state.value}>
+              {state.label}
+            </AutocompleteItem>
+          ))}
+        </Autocomplete>
       </div>
-      <Card fullWidth>
-        <CardBody className='flex justify-center items-center'>
-          <Chart1 />
-          <Chart2 />
-        </CardBody>
-      </Card> 
+      <img src={Map} alt="Analytics Map India" className='w-auto h-auto' />
     </div>
   )
 }
 
-export default Analytics
+export default Global

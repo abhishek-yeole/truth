@@ -2,7 +2,7 @@ import { cn } from "./cn.js";
 import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useRef, useState } from "react";
-import ExpandIcon from "../assets/ExpandIcon.jsx";
+import ExpandIcon from "../../assets/ExpandIcon.jsx";
 import toast from "react-hot-toast";
 
 export const FloatingDock = ({
