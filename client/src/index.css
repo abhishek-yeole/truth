@@ -10,7 +10,7 @@ html {
   /* Light Theme Scrollbar */
   *::-webkit-scrollbar {
     height: 10px;
-    width: 10px;
+    width: 6px;
   }
   *::-webkit-scrollbar-track {
     border-radius: 20px;

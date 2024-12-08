@@ -1,9 +1,9 @@
 import React from 'react'
 
-const SaerchBy = () => {
+const SearchBy = () => {
   return (
     <div>Saerch By date, location, type, severity, etc..</div>
   )
 }
 
-export default SaerchBy
+export default SearchBy

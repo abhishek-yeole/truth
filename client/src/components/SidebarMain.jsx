@@ -1,17 +1,20 @@
 import React, { useState } from "react";
+import { cn } from "./ui/cn";
 import { Sidebar, SidebarBody, SidebarLink } from "./ui/Siderbar";
-import { Switch, Dropdown, DropdownTrigger, DropdownItem, DropdownMenu } from "@nextui-org/react";
+import { Breadcrumbs, BreadcrumbItem, Dropdown, DropdownTrigger, Button, DropdownMenu, DropdownItem, Switch } from '@nextui-org/react';
 import { useTheme } from "next-themes";
 import { useGlobalContext } from "../contexts/GlobalContext";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import TruthLogo from "../assets/truth-dark.svg";
 import { SunIcon } from "../assets/SunIcon";
 import { MoonIcon } from "../assets/MoonIcon";
 import { LogoutIcon } from "../assets/LogoutIcon";
-import { cn } from "./ui/cn";
 import MenuIcon from "../assets/MenuIcon";
+import { ArrowDownIcon } from '../assets/ArrowDownIcon';
 
-export function SidebarMain({ content, tabs, setTabs }) {
+export function SidebarMain({ content, tabs, setTabs, links }) {
   const { theme, setTheme } = useTheme();
+  const navigateTo = useNavigate();
   const { user, logout } = useGlobalContext();
 
   const [open, setOpen] = useState(false);
@@ -69,7 +72,7 @@ export function SidebarMain({ content, tabs, setTabs }) {
                     <DropdownItem
                       key={index}
                       as="a"
-                      href={tab.href}
+                      onPress={() => navigateTo(tab.href)}
                       onClick={() => setTabs((prev) => prev.map((t) => t.href === tab.href ? { ...t, active: true } : { ...t, active: false }))}
                       startContent={tab.icon}
                       className={`flex flex-row items-center gap-2 ${tab.active && "bg-violet-600/40"}`}
@@ -159,17 +162,47 @@ export function SidebarMain({ content, tabs, setTabs }) {
           </div>
         </SidebarBody>
       </Sidebar>
-      <Dashboard content={content}/>
+      <Dashboard content={content} tabs={tabs} setTabs={setTabs} links={links}/>
     </div>)
   );
 }
 
-const Dashboard = ({ content }) => {
+const Dashboard = ({ content, tabs, setTabs, links }) => {
+  const location = useLocation();
+  const navigateTo = useNavigate();
+
   return (
     (<div className="flex flex-1">
-      {<div className="transition-all p-3 md:p-5 rounded-t-2xl sm:rounded-bl-2xl sm:rounded-tr-none border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 flex flex-col gap-2 flex-1 w-full h-auto">
+      <div className="transition-all p-3 md:p-5 rounded-t-2xl sm:rounded-bl-2xl sm:rounded-tr-none border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 flex flex-col gap-2 flex-1 w-full h-auto">
+        <Breadcrumbs variant="solid" color="primary" className='font-semibold'>
+          <BreadcrumbItem>{links.map((link) => location.pathname.includes(link.href.substring(6,11)) && <p key={link.href}>{link.title}</p>)}</BreadcrumbItem>
+          <BreadcrumbItem classNames={{ item: "px-0" }}>
+            <Dropdown backdrop="opaque">
+              <DropdownTrigger>
+                <Button
+                  className="h-6 pr-2 text-small font-semibold"
+                  endContent={<ArrowDownIcon className="text-xl" />}
+                  radius="full"
+                  size="sm"
+                  variant="light"
+                  color="primary"
+                >
+                  {/* {location.hash === '' ? tabs[0]?.label : tabs.map((tab) => tab.href === location.hash && <p key={tab.href}>{tab.label}</p>)} */}
+                  {tabs.map((tab) => location.pathname.includes(tab.href) && <p key={tab.href}>{tab.label}</p>)}
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Routes">
+                {tabs.map((tab, index) => (
+                  <DropdownItem key={index} onPress={() => navigateTo(tab.href)} className={`${tab.active && 'bg-fuchsia-500/40'}`} startContent={tab.icon} onClick={() => setTabs((prev) => prev.map((t) => t.href === tab.href ? { ...t, active: true } : { ...t, active: false }))} >
+                    {tab.label}
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
+          </BreadcrumbItem>
+        </Breadcrumbs>
         {content}
-      </div>}
+      </div>
     </div>)
   );
 };

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useLocation, useOutletContext } from 'react-router-dom';
+import { replace, useLocation, useNavigate, useOutletContext } from 'react-router-dom';
 import Explore from './Explore';
 import Popular from './Popular';
 import NearBy from './NearBy';
@@ -17,87 +17,86 @@ import { SavedIcon } from '../../assets/SavedIcon';
 
 const Community = () => {
   const location = useLocation();
+  const navigateTo = useNavigate();
   const { tabs, setTabs } = useOutletContext();
 
   useEffect(() => {
+    if (location.pathname === "/user/community/" || location.pathname === "/user/community") navigateTo("/user/community/explore", replace);
     setTabs([
       {
         label: "Explore",
-        href: "#explore",
+        href: "/user/community/explore",
         icon: (
           <ExploreIcon className="dark:text-purple-200 h-5 w-5 flex-shrink-0 transition-all" />
         ),
         element: <Explore />,
-        active: location.hash === '' || location.hash === "#explore" ? true : false,
+        active: location.pathname === "/user/community" || location.pathname === "/user/community/" || location.pathname.includes("/explore") ? true : false,
       },
       {
         label: "Popular",
-        href: "#popular",
+        href: "/user/community/popular",
         icon: (
           <TrendingIcon className="dark:text-purple-200 h-5 w-5 flex-shrink-0 transition-all" />
         ),
         element: <Popular />,
-        active: location.hash === "#popular" ? true : false,
+        active: location.pathname.includes("/popular") ? true : false,
       },
       {
         label: "NearBy",
-        href: "#nearby",
+        href: "/user/community/nearby",
         icon: (
           <NearbyIcon className="dark:text-purple-200 h-5 w-5 flex-shrink-0 transition-all" />
         ),
         element: <NearBy />,
-        active: location.hash === "#nearby" ? true : false,
+        active: location.pathname.includes("/nearby") ? true : false,
       },
       {
         label: "My Communities",
-        href: "#mycommunities",
+        href: "/user/community/mycommunities",
         icon: (
           <CommunityIcon className="dark:text-purple-200 h-5 w-5 flex-shrink-0 transition-all" />
         ),
         element: <MyCommunites />,
-        active: location.hash === "#mycommunities" ? true : false,
+        active: location.pathname.includes("/mycommunities") ? true : false,
       },
       {
         label: "My Posts",
-        href: "#myposts",
+        href: "/user/community/myposts",
         icon: (
           <MyPostIcon className="dark:text-purple-200 h-5 w-5 flex-shrink-0 transition-all" />
         ),
         element: <MyPosts />,
-        active: location.hash === "#myposts" ? true : false,
+        active: location.pathname.includes("/myposts") ? true : false,
       },
       {
         label: "Saved History",
-        href: "#savedhistory",
+        href: "/user/community/saved",
         icon: (
           <SavedIcon className="dark:text-purple-200 h-5 w-5 flex-shrink-0 transition-all" />
         ),
         element: <SavedHistory />,
-        active: location.hash === "#savedhistory" ? true : false,
+        active: location.pathname.includes("/saved") ? true : false,
       },
     ]);
   }, []);
 
   return (
-    <div>
-      <p>Community</p>
-      <div className="flex flex-col gap-2">
-        {tabs.map((tab, index) => (
-          <AnimatePresence key={index}>
-            {tab.active && (
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-              >
-                <ScrollShadow hideScrollBar size={50} className="flex flex-col gap-2 flex-1 w-full h-[90vh] overflow-auto">
-                  {tab.element}
-                </ScrollShadow>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        ))}
-      </div>
+    <div className="flex flex-col gap-2">
+      {tabs.map((tab, index) => (
+        <AnimatePresence key={index}>
+          {tab.active && (
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+            >
+              <ScrollShadow hideScrollBar size={50} className="flex flex-col gap-2 flex-1 w-full h-[90vh] overflow-auto">
+                {tab.element}
+              </ScrollShadow>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      ))}
     </div>
   )
 }

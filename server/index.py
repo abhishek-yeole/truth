@@ -2,6 +2,7 @@ from flask import Flask, jsonify, render_template, request, send_from_directory
 from flask_cors import CORS
 from pymongo.mongo_client import MongoClient
 from bson.objectid import ObjectId
+import vercel_blob
 import google.generativeai as genai
 import urllib.parse
 from flask_bcrypt import Bcrypt
@@ -15,6 +16,7 @@ import ssl
 from dotenv import load_dotenv
 import random
 import os
+import json
 
 load_dotenv()
 
@@ -202,29 +204,46 @@ def serialize_issue(issue):
     issue['_id'] = str(issue['_id'])
     return issue
 
+# Function to upload files to Vercel Blob Store.
+def upload(files):
+    uploaded_files_info = []
+    for file in files:
+        upload_info = vercel_blob.put(file, files[file].read(), {})
+        uploaded_files_info.append(upload_info)
+    return uploaded_files_info
+
 # Route to Add a New Issue
-@app.route('/issues', methods=['POST'])
+@app.route('/issues/add', methods=['POST'])
 @auth_user
 def add_issue():
-    data = request.json
+    data = json.loads(request.form.get('json'))
+    files = request.files
+    issue_files = []
+    if files:
+        issue_files = upload(files)
+    else:
+        return jsonify({"error": "No files provided"}), 204
+
     try:
         new_issue = {
-            "user_id": data["user_id"],
+            "userId": request.userId,
             "title": data["title"],
             "description": data["description"],
             "location": data.get("location", {}),
+            "issueDuration": data.get("issueDate", {}),
             "date": datetime.now().strftime("%d-%m-%Y"),
             "modified": datetime.now().strftime("%d-%m-%Y %H:%M:%S"),
             "approved": False,
-            "display": data.get("display", "public"),
+            "display": data.get("display", False),
             "type": data.get("type", "general"),
+            "tags": data.get("tags", []),
             "against": data.get("against", {}),
             "resolved": data.get("resolved", {}),
             "progress": data.get("progress", 0),
             "severity": data.get("severity", 1),
             "comments": [],
             "upvotes": [],
-            "tags": data.get("tags", [])
+            "issueFiles": issue_files,
         }
 
         # Insert the new issue into the database
@@ -234,8 +253,33 @@ def add_issue():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
+# Route to Get all issues
+@app.route('/issues/all', methods=["GET"])
+@auth_user
+def get_all_issues():
+    result = issues_collection.find({"userId": request.userId})
+    issues = []
+    for issue in result:
+        issue["_id"] = str(issue["_id"])
+        issues.append(issue)
+    if issues:
+        return jsonify({"issues": issues}), 200
+    else:
+        return jsonify({"error": "Cannot retrive issues right now."}), 400
+    
+# Route to Get all issues
+@app.route('/issue/<id>', methods=["GET"])
+@auth_user
+def get_issue(id):
+    result = issues_collection.find_one({"_id": ObjectId(id), "userId": request.userId})
+    if result:
+        result["_id"] = str(result["_id"])
+        return jsonify({"issue": result}), 200
+    else:
+        return jsonify({"error": "Cannot retrive issues right now."}), 400
+
 # Route to Modify an Existing Issue
-@app.route('/issues/<string:issue_id>', methods=['PUT'])
+@app.route('/issues/edit/<string:issue_id>', methods=['PUT'])
 @auth_user
 def modify_issue(issue_id):
     data = request.json
@@ -273,4 +317,3 @@ def modify_issue(issue_id):
 
 # if __name__ == '__main__':
 #     app.run(debug=True, host='0.0.0.0')
-#     app.run(debug=True)

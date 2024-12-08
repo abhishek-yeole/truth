@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Button, Card, CardBody, CardFooter, Checkbox, Chip, DateRangePicker, Divider, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ScrollShadow, Select, SelectItem, Slider, Switch, Textarea, Tooltip, useDisclosure } from '@nextui-org/react'
 import {parseZonedDateTime, getLocalTimeZone, today, parseAbsoluteToLocal, now} from "@internationalized/date";
 import { useNavigate } from 'react-router-dom';
@@ -15,9 +15,43 @@ import LoaderIcon from '../../assets/LoaderIcon';
 import { SuccessIcon } from '../../assets/SuccessIcon';
 import { ExpandIcon2 } from '../../assets/ExpandIcon2';
 
-const AddIssues = () => {
+const EditInterface = ({ id, issueP }) => {
   const navigateTo = useNavigate();
+  const [issue, setIssue] = useState(issueP);
   const [files, setFiles] = useState([]);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+
+  const getIssue = async() => {
+    const result = await axios.get("/issue/" + id);
+    if (result.status === 200) {
+      setIssue(result.data.issue);
+      issueSetter(result.data.issue);
+    } else toast.error(result.status + ": " + result.data.error);
+  }
+
+  const issueSetter = (issue) => {
+    setFiles([]);
+    setTitle(issue.title);
+    setDescription(issue.description);
+    setDisplay(issue.display);
+    setSeverity(issue.severity);
+    setProgress(issue.progress);
+    setAddress(issue.location.address);
+    setIssueDate({
+      start: parseZonedDateTime(issue.issueDuration.start),
+      end:  issue.issueDuration.onGoing ? now(getLocalTimeZone()) : parseZonedDateTime(issue.issueDuration.end),
+    });
+    setSelectedTypes(issue.type);
+    setTags(issue.tags.join(", "));
+    setIssueAgainst(issue.against);
+    setIssueResolution(issue.resolved);
+    setUploadedFiles(issue.issueFiles);
+  };
+
+  useEffect(() => {
+    if (issueP === undefined) getIssue();
+    else issueSetter(issueP);
+  }, [issueP])
 
   const [title, setTitle] = useState(null);
   const validateTitle = (title) => title.trim().length <= 10 || title.trim().length >= 70;
@@ -102,7 +136,7 @@ const AddIssues = () => {
   const handleIssueResolutionChange = (e) => setIssueResolution((prev) => ({ ...prev, [e.name]: e.value }));  
 
   const validator = () => {
-    if (files.length === 0)  {toast.error("Upload atleast one file related to the issue."); return false;}
+    if (files.length === 0 && uploadedFiles.length === 0)  {toast.error("Upload atleast one file related to the issue."); return false;}
     if (title === null || isInvalidTitle) {toast.error("Please check issue title."); if(title === null) setTitle(""); return false;}
     if (description === null || isInvalidDescription) {toast.error("Please check issue description."); if(description === null) setDescription(""); return false;}
     if (address === null || isInvalidAddress) {toast.error("Please check issue address."); if(address === null) setAddress(""); return false;}
@@ -138,14 +172,15 @@ const AddIssues = () => {
     });
 
     try {
-      const result = await axios.post("/issues/add", formData, {
+      const result = await axios.post("/issues/edit", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
+      console.log(result.data.message, result.data.issue_id);
       setAdded(result.data.issue_id);
     } catch (error) {
-      toast.error("Error submitting form data.",);
+      console.error("Error submitting form data:", error);
     }
     setLoading(false);
   };
@@ -192,7 +227,39 @@ const AddIssues = () => {
             </div>
             <ScrollShadow orientation="horizontal" hideScrollBar className="w-full max-w-full overflow-auto scroll-smooth">
               <div className="flex gap-4 h-[160px] items-center">
-                {files.length > 0 ? files.map((file, index) => (
+                {uploadedFiles.length > 0 && uploadedFiles.map((upload, index) => (
+                  upload.contentType !== "application/pdf" ? (
+                    <div
+                      key={index}
+                      className="flex-shrink-0 outline-none focus:ring-2 focus:ring-blue-600 rounded-lg relative"
+                      tabIndex={0}
+                    >
+                      <img
+                        src={upload.url}
+                        alt={upload.pathname}
+                        className="h-40 object-contain rounded-lg shadow"
+                      />
+                      <Button variant="shadow" isIconOnly color="primary" onPress={() => {setImage(upload); fileModal.onOpen();}} className="absolute top-1 left-1 w-10 h-10 rounded-xl z-[60]"><ExpandIcon2 /></Button>
+                    </div>
+                  ) : (
+                    <div key={index} className="flex-shrink-0 relative">
+                      <object data={upload.url} type="application/pdf" width="100%" height="100%" className="hidden sm:block outline-none focus:ring-2 focus:ring-blue-600 rounded-lg" tabIndex={0}>
+                        <p>{upload.pathname} <a href={upload.url} /></p>
+                      </object>
+                      <span className="block sm:hidden absolute top-1 left-1/2 -translate-x-1/2 text-center">{upload.pathname.substring(0,15) + "..."}</span>
+                      <iframe
+                        src={upload.url}
+                        width="100%"
+                        height="100%"
+                        className="block sm:hidden outline-none focus:ring-2 focus:ring-blue-600 rounded-lg"
+                        tabIndex={0}
+                        title={upload.pathname}
+                      />
+                      <Button variant="shadow" isIconOnly color="primary" onPress={() => {setImage(upload); fileModal.onOpen();}} className="absolute top-1 left-1 w-10 h-10 rounded-xl z-[60]"><ExpandIcon2 /></Button>
+                    </div>
+                  )
+                ))}
+                {files.length > 0 && files.map((file, index) => 
                   file.type !== "application/pdf" ? (
                     <div
                       key={index}
@@ -204,12 +271,12 @@ const AddIssues = () => {
                         alt={file.name}
                         className="h-40 object-contain rounded-lg shadow"
                       />
-                      <Button variant="shadow" isIconOnly color="primary" onPress={() => {setImage(file); fileModal.onOpen();}} className="absolute top-1 left-1 w-10 h-10 rounded-xl z-[60]"><ExpandIcon2 /></Button>
+                      <Button variant="shadow" isIconOnly color="primary" onPress={() => {setPdf(file); fileModal.onOpen();}} className="absolute top-1 left-1 w-10 h-10 rounded-xl z-[60]"><ExpandIcon2 /></Button>
                     </div>
                   ) : (
                     <div key={index} className="flex-shrink-0 relative">
                       <object data={file.preview} type="application/pdf" width="100%" height="100%" className="hidden sm:block outline-none focus:ring-2 focus:ring-blue-600 rounded-lg" tabIndex={0}>
-                        <p>{file.name} <a href={file.url} /></p>
+                        <p>{file.name} <a href={file.preview} /></p>
                       </object>
                       <span className="block sm:hidden absolute top-1 left-1/2 -translate-x-1/2 text-center">{file.name.substring(0,15) + "..."}</span>
                       <iframe
@@ -218,42 +285,34 @@ const AddIssues = () => {
                         height="100%"
                         className="block sm:hidden outline-none focus:ring-2 focus:ring-blue-600 rounded-lg"
                         tabIndex={0}
-                        title={pdf.name}
+                        title={file.name}
                       />
                       <Button variant="shadow" isIconOnly color="primary" onPress={() => {setPdf(file); fileModal.onOpen();}} className="absolute top-1 left-1 w-10 h-10 rounded-xl z-[60]"><ExpandIcon2 /></Button>
                     </div>
                   )
-                )) : (
-                  <div className="p-2">
-                    <p className="font-semibold mb-5">No files uploaded</p>
-                    <ul className="list-disc pl-6 text-sm">
-                      <li>Upload files related to the issue described.</li>
-                      <li>File size must be at most 4 MB.</li>
-                    </ul>
-                  </div>
                 )}
-                <Modal size="5xl" isOpen={fileModal.isOpen} onOpenChange={fileModal.onOpenChange} onClose={() => {setPdf({}); setImage({});}}>
+                <Modal size="5xl" isOpen={fileModal.isOpen} onOpenChange={fileModal.onOpenChange} onClose={() => {setImage({}); setPdf({});}}>
                   <ModalContent>
                     {(onClose) => (
                       <>
-                        <ModalHeader>{pdf.name || image.name}</ModalHeader>
+                        <ModalHeader>{pdf.pathname || pdf.name || image.name || image.pathname}</ModalHeader>
                         <ModalBody>
-                          <object data={pdf.preview || image.preview} type="application/pdf" width="100%" height="500px" className="hidden sm:block outline-none focus:ring-2 focus:ring-blue-600 rounded-lg" tabIndex={0}>
-                            <p>{pdf.name || image.name} <a href={pdf.preview || image.preview} /></p>
+                          <object data={pdf.url || pdf.preview || image.url || image.preview} type="application/pdf" width="100%" height="500px" className="hidden sm:block outline-none focus:ring-2 focus:ring-blue-600 rounded-lg" tabIndex={0}>
+                            <p>{pdf.pathname || pdf.name || image.name || image.pathname} <a href={pdf.url || pdf.preview || image.url || image.preview} /></p>
                           </object>
                           {pdf.url || pdf.preview ? (
                             <iframe
-                              src={pdf.preview}
+                              src={pdf.url || pdf.preview}
                               width="100%"
                               height="100%"
                               className="block sm:hidden outline-none focus:ring-2 focus:ring-blue-600 rounded-lg"
                               tabIndex={0}
-                              title={pdf.name}
+                              title={pdf.pathname || pdf.name}
                             />
                           ) : (
                             <img
-                              src={image.preview}
-                              alt={image.name}
+                              src={image.preview || image.url}
+                              alt={image.name || image.pathname}
                               className="object-contain rounded-lg shadow block sm:hidden"
                             />
                           )}
@@ -420,6 +479,7 @@ const AddIssues = () => {
 
               <Select
                 items={issueTypes}
+                defaultSelectedKeys={selectedTypes}
                 label="Issue Types"
                 labelPlacement="inside"
                 description="Select type of issue appropriately."
@@ -616,7 +676,7 @@ const AddIssues = () => {
                 <ModalBody> <p> Are you sure you want to reset the entire form? </p> </ModalBody>
                 <ModalFooter>
                   <Button color="danger" variant="light" onPress={resetModal.onClose}> No </Button>
-                  <Button color="primary" onPress={() => {handleReset(); onClose();}}> Yes </Button>
+                  <Button color="primary" onPress={() => {issueSetter(issue); onClose();}}> Yes </Button>
                 </ModalFooter>
               </>
             )}
@@ -645,7 +705,7 @@ const AddIssues = () => {
                 <ModalHeader className="flex justify-start align-middle items-center w-full gap-1 text-2xl">
                   <SubmitIcon /> &nbsp;&nbsp; <p>{added ? "Issue submitted successfully." : loading ? "Submitting issue..." : "Submit issue ?"}</p>
                 </ModalHeader>
-                <ModalBody className="p-5"> {added ? <SuccessIcon className="text-green-600 text-center text-[56px] w-full" /> : loading ? <LoaderIcon className="text-blue-600 text-center text-[56px] w-full" /> : <p>Are you sure you want to submit the issue? </p>}</ModalBody>
+                <ModalBody className="p-5"> {added ? <SuccessIcon className="text-green-600 text-center text-[56px] w-full" /> : loading ? <LoaderIcon className="text-blue-600 text-center text-[56px] w-full" /> : <p>Are you sure you want to save these changes in the issue? </p>}</ModalBody>
                 <ModalFooter>
                   {added ? (
                     <>
@@ -668,4 +728,4 @@ const AddIssues = () => {
   )
 }
 
-export default AddIssues
+export default EditInterface
