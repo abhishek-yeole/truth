@@ -73,7 +73,7 @@ export default function User () {
   const updateActiveLinks = () => {
     const updatedLinkItems = links.map(item => ({
       ...item,
-      active: item.href === location.pathname,
+      active: item.href === "/" + location.pathname.split("/")[1] + "/" + location.pathname.split("/")[2],
     }));
     setLinks(updatedLinkItems);
   };
@@ -86,7 +86,7 @@ export default function User () {
     <>
       <FloatingDock items={links} desktopClassName="z-[49] fixed bottom-2 left-1/2 -translate-x-1/2" mobileClassName="z-50 fixed bottom-2 right-2" />
       <div className="h-screen">
-        <SidebarMain content={<Outlet context={{ tabs, setTabs }} />} tabs={tabs} setTabs={setTabs}/>
+        <SidebarMain content={<Outlet context={{ tabs, setTabs }} />} tabs={tabs} setTabs={setTabs} links={links} />
       </div>
     </>
   )
